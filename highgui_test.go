@@ -39,6 +39,39 @@ func TestWindow(t *testing.T) {
 	}
 }
 
+func TestWindowWithFlags(t *testing.T) {
+	window := NewWindowWithFlags("test", WindowFullscreen)
+	if window == nil {
+		t.Error("Unable to create Window")
+	}
+	if window.name != "test" {
+		t.Error("Invalid Window name")
+	}
+	val := window.WaitKey(1)
+	if val != -1 {
+		t.Error("Invalid WaitKey")
+	}
+	if !window.IsOpen() {
+		t.Error("Window should have been open")
+	}
+
+	prop := int(window.GetWindowProperty(WindowPropertyFullscreen))
+	if prop != WindowFullscreen {
+		t.Error("Window property should have been created fullscreen")
+	}
+
+	window.SetWindowTitle("My new title")
+
+	window.MoveWindow(100, 100)
+
+	window.ResizeWindow(100, 100)
+
+	window.Close()
+	if window.IsOpen() {
+		t.Error("Window should have been closed")
+	}
+}
+
 func TestIMShow(t *testing.T) {
 	window := NewWindow("imshow")
 	if window == nil {

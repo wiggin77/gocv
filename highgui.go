@@ -41,6 +41,22 @@ func NewWindow(name string) *Window {
 	return &Window{name: name, open: true}
 }
 
+// NewWindowWithFlags creates a new named OpenCV window with the specified flags.
+//
+// For further details, please see:
+// http://docs.opencv.org/master/d7/dfc/group__highgui.html#ga5afdf8410934fd099df85c75b2e0888b
+//
+func NewWindowWithFlags(name string, flags WindowFlag) *Window {
+	runtime.LockOSThread()
+
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+
+	C.Window_New(cName, flags)
+
+	return &Window{name: name, open: true}
+}
+
 // Close closes and deletes a named OpenCV Window.
 //
 // For further details, please see:
@@ -80,6 +96,12 @@ const (
 
 	// WindowKeepRatio indicates always maintain an aspect ratio that matches the contents.
 	WindowKeepRatio = 0
+
+	// WindowGuiExpanded draws the window with statusbar and toolbar.
+	WindowGuiExpanded = 0
+
+	// WindowGuiNormal draws the window without statusbar and toolbar.
+	WindowGuiNormal = 0x00000010
 )
 
 // WindowPropertyFlag flags for SetWindowProperty / GetWindowProperty.
